@@ -40,7 +40,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        language: ["JavaScript"]
+        language: ["JavaScript", "Python"]
 
     steps:
       - name: Harden Runner
