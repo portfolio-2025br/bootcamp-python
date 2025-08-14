@@ -19,4 +19,13 @@
 # Primeiro pograma de exemplo
 # More info at https://github.com/portfolio-2025br/bootcamp-python
 
+"""
+Imprime um "Olá, mundo!" na saída padrão.
+
+    Parameters:
+        Nenhum
+
+    Returns:
+        Nenhum
+"""
 print("Olá, mundo!")
