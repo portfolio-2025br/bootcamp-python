@@ -26,3 +26,8 @@ updates:
       interval: "weekly"
       day: "saturday"
       time: "06:00"
+
+  - package-ecosystem: docker
+    directory: /.devcontainer
+    schedule:
+      interval: daily
