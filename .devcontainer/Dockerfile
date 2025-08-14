@@ -29,6 +29,8 @@ RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
         tee "$TMPFILE" | bash - \
     && echo "$NODE_DOWNLOAD_SHA256  $TMPFILE" | sha256sum -c - \
     && apt-get -y install --no-install-recommends nodejs=* \
+    # Install Redis
+    && pip install --no-cache-dir redis==6.4.0 \
     # Clean up
     && apt-get -y clean \
     && rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/*
