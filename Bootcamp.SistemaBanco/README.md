@@ -33,8 +33,8 @@ Pontos a destacar na minha solução:
   - Uso do `commitlint` para validação e padronização da mensagem de commit;
   - Uso de analisadores estáticos de código para verificar a qualidade do código;
 - Uso do SonarQube localmente para verificar a qualidade do código e documentos do projeto;
-- Uso de atualizaçao automática de dependências com uso do Dependabot;
-- Evidências de teste em <https://github.com/portfolio-2025br/bootcamp-python/tree/main/Bootcamp.SistemaBancoI>.
+- Uso de atualização automática de dependências com uso do Dependabot;
+- Evidências de teste em <https://github.com/portfolio-2025br/bootcamp-python/tree/main/Bootcamp.SistemaBanco>.
 
 Ainda:
 
@@ -47,9 +47,20 @@ Ainda:
 
 ### Integração Contínua em Ação
 
-- CI funciona e adverte os desenvolvedores em caso de problemas:
+O CI funciona e adverte o time de desenvolivimento em caso de problemas.
+
+- Sugestão para definir uma versão específica dos pacotes. Isto garante que problemas ou comprometimento do _upstream_
+  não impactem automaticamente este projeto:
 
 ![CI](CI-trabalhando.png)
+
+- Detecção de código fonte duplicado:
+
+![Duplicidade](Codigo-duplicado.png)
+
+- Detecção de problemas na formatação do código fonte:
+
+![Formatar](Formatar-codigo.png)
 
 ### Testes Manuais
 
@@ -59,6 +70,6 @@ Ainda:
 
 ### Dados salvos em DB (Redis)
 
-- Os dados permanecem salvos em banco de dados após o encerramento da aplicação.
+- Os dados permanecem salvos em um banco de dados mesmo após o encerramento da aplicação:
 
 ![Dados salvos em DB](PersistenciaDB.png)

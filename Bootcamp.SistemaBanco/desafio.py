@@ -24,7 +24,7 @@ def validar_redis() -> bool:
     retries = 3
     while True:
         try:
-            return cache.get("limite") is not None
+            return cache.get("live") is not None
         except redis.exceptions.ConnectionError as exc:
             if retries == 0:
                 raise exc
@@ -32,23 +32,9 @@ def validar_redis() -> bool:
             time.sleep(0.5)
 
 
-def initializar_dados_redis():
+def initializar_redis(valor_saldo, qtde_saques, texto_extrato):
     """Inicializa o Redis com dados de uma conta bancária padrão"""
-    retries = 3
-    while True:
-        try:
-            # Valores default
-            cache.set("saldo", 0)
-            cache.set("limite", 500)
-            cache.set("extrato", "")
-            cache.set("numero_saques", 0)
-
-            break
-        except redis.exceptions.ConnectionError as exc:
-            if retries == 0:
-                raise exc
-            retries -= 1
-            time.sleep(0.5)
+    salvar_dados(valor_saldo, qtde_saques, texto_extrato)
 
 
 def obter_dados_redis():
@@ -57,11 +43,10 @@ def obter_dados_redis():
     while True:
         try:
             local_saldo = float(cache.get("saldo").decode("utf-8"))
-            local_limite = float(cache.get("limite").decode("utf-8"))
             local_extrato = cache.get("extrato").decode("utf-8")
             local_numero_saques = float(cache.get("numero_saques").decode("utf-8"))
 
-            return local_extrato, local_limite, local_numero_saques, local_saldo
+            return local_saldo, local_numero_saques, local_extrato
         except redis.exceptions.ConnectionError as exc:
             if retries == 0:
                 raise exc
@@ -69,15 +54,15 @@ def obter_dados_redis():
             time.sleep(0.5)
 
 
-def salvar_dados():
+def salvar_dados(valor_saldo, qtde_saques, texto_extrato):
     """Salva os dados da conta bancária no banco de dados (no Redis)"""
     retries = 3
     while True:
         try:
-            cache.set("saldo", saldo)
-            cache.set("limite", limite)
-            cache.set("extrato", extrato)
-            cache.set("numero_saques", numero_saques)
+            cache.set("saldo", valor_saldo)
+            cache.set("extrato", texto_extrato)
+            cache.set("numero_saques", qtde_saques)
+            cache.set("live", 1)
 
             break
         except redis.exceptions.ConnectionError as exc:
@@ -93,7 +78,8 @@ def limpar_tela():
 
 
 # void main(void)
-LIMITE_SAQUES = 5
+QTDE_MAXIMA_SAQUES = 3
+VALOR_MAXIMO_POR_SAQUE = 500
 MENU = """
 
 [d] Depositar
@@ -107,11 +93,11 @@ cache = redis.Redis(host="redis", port=6379)
 
 # Verifica se há algum dado no Redis. Se houver, recupera, caso contrário, inicializa.
 if not validar_redis():
-    initializar_dados_redis()
-extrato, limite, numero_saques, saldo = obter_dados_redis()  # pylint: disable-msg=C0103
+    initializar_redis(0, 0, "")
+saldo, saques_realizados, extrato = obter_dados_redis()  # pylint: disable-msg=C0103
 
 while True:
-    salvar_dados()
+    salvar_dados(saldo, saques_realizados, extrato)
     opcao = input(MENU)
     limpar_tela()
 
@@ -130,9 +116,9 @@ while True:
 
         excedeu_saldo = valor > saldo
 
-        excedeu_limite = valor > limite
+        excedeu_limite = valor > VALOR_MAXIMO_POR_SAQUE
 
-        excedeu_saques = numero_saques >= LIMITE_SAQUES
+        excedeu_saques = saques_realizados >= QTDE_MAXIMA_SAQUES
 
         if excedeu_saldo:
             print("Operação falhou! Você não tem saldo suficiente.")
@@ -145,8 +131,8 @@ while True:
 
         elif valor > 0:
             saldo -= valor
-            extrato += f"Saque: R$ {valor:.2f}\n"
-            numero_saques += 1
+            extrato += f"Saque: \tR$ {valor:.2f}\n"
+            saques_realizados += 1
 
         else:
             print("Operação falhou! O valor informado é inválido.")
