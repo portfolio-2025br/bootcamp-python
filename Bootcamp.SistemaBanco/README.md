@@ -62,11 +62,15 @@ O CI funciona e adverte o time de desenvolivimento em caso de problemas.
 
 ![Formatar](Formatar-codigo.png)
 
-### Testes Manuais
+### Testes
 
-- Testes do sistema foram realizados:
+- Testes manuais do sistema foram realizados:
 
-![Testado](Teste.png)
+![Testes de movimentação](Teste-1.png)
+
+****
+
+![Testes de cadastro](Teste-2.png)
 
 ### Dados salvos em DB (Redis)
 
