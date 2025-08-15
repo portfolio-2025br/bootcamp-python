@@ -33,3 +33,10 @@ updates:
       interval: "weekly"
       day: "saturday"
       time: "06:00"
+
+  - package-ecosystem: pip
+    directory: /Bootcamp.SistemaBancoI
+    schedule:
+      interval: "weekly"
+      day: "saturday"
+      time: "06:00"
