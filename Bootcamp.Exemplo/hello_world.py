@@ -16,7 +16,7 @@
 # the Free Software Foundation, as expressed in version 2, seen at
 # https://www.gnu.org/licenses/gpl-2.0.html
 # ################################################################################
-# Primeiro pograma de exemplo
+# Programa de exemplo
 # More info at https://github.com/portfolio-2025br/bootcamp-python
 
 """

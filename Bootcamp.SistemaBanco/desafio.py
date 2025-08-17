@@ -1,5 +1,24 @@
 #!/usr/bin/env python3
 
+# ################################################################################
+#  Copyright (c) 2025  Claudio André <portfolio-2025br at claudioandre.slmail.me>
+#              ___                _      ___       _
+#             (  _`\             ( )_  /'___)     (_ )  _
+#             | |_) )  _    _ __ | ,_)| (__   _    | | (_)   _
+#             | ,__/'/'_`\ ( '__)| |  | ,__)/'_`\  | | | | /'_`\
+#             | |   ( (_) )| |   | |_ | |  ( (_) ) | | | |( (_) )
+#             (_)   `\___/'(_)   `\__)(_)  `\___/'(___)(_)`\___/'
+#
+# This program comes with ABSOLUTELY NO WARRANTY; express or implied.
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, as expressed in version 2, seen at
+# https://www.gnu.org/licenses/gpl-2.0.html
+# ################################################################################
+# Sistema bancário de Exemplo
+# More info at https://github.com/portfolio-2025br/bootcamp-python
+
 """
 Sistema Bancário com Python.
 
@@ -18,6 +37,10 @@ import textwrap
 import time
 
 import redis
+
+AGENCIA = "0001"
+QTDE_MAXIMA_SAQUES = 3
+VALOR_MAXIMO_POR_SAQUE = 500
 
 
 # Rotinas Redis
@@ -87,12 +110,13 @@ def menu():
     [d]\tDepositar
     [s]\tSacar
     [e]\tExtrato
-    -------------------------
+       \t-----------------
     [c]\tCadastrar cliente
     [n]\tCriar nova conta
     [l]\tListar contas
+       \t-----------------
     [q]\tSair
-    => """
+       \t=> """
 
     return input(textwrap.dedent(texto))
 
@@ -104,7 +128,7 @@ def depositar(saldo, extrato, /):
 
     if valor > 0:
         saldo += valor
-        extrato += f"Depósito:\tR$ {valor:.2f}\n"
+        extrato += f"Depósito:{f'R$ {valor:.2f}':>41}\n"
         print("=== Depósito realizado com sucesso! ===")
     else:
         print("=> Operação falhou! O valor informado é inválido.")
@@ -131,7 +155,7 @@ def sacar(*, saldo, extrato, limite, numero_saques, limite_saques):
 
     elif valor > 0:
         saldo -= valor
-        extrato += f"Saque:\t\tR$ {valor:.2f}\n"
+        extrato += f"Saque:{f'R$ {valor:.2f}':>44}\n"
         numero_saques += 1
         print("=== Saque realizado com sucesso! ===")
 
@@ -145,7 +169,7 @@ def exibir_extrato(saldo, /, *, extrato):
     """Rotina para mostrar o extrato do cliente"""
     print("===================== EXTRATO ====================")
     print("Não foram realizadas movimentações.\n" if not extrato else extrato)
-    print(f"Saldo:\t\tR$ {saldo:.2f}")
+    print(f"Saldo:{f'R$ {saldo:.2f}':>44}\n")
     print("==================================================")
 
 
@@ -192,13 +216,13 @@ def listar_contas(contas):
     """Lista todas as contas cadastradas no sistema"""
     for conta in contas:
         linha = f"""\
-            Agência:\t{conta['agencia']}
-            C/C:\t\t{conta['numero_conta']}
-            Titular:\t{conta['cliente']['nome']}
+            Agência:\t{conta["agencia"]}
+            C/C:\t\t{conta["numero_conta"]}
+            Titular:\t{conta["cliente"]["nome"]}
         """
-        print("=" * 60)
+        print("=" * 50)
         print(textwrap.dedent(linha))
-    print("=" * 60)
+    print("=" * 50)
 
 
 def buscar_cliente(cpf, clientes):
@@ -210,16 +234,13 @@ def buscar_cliente(cpf, clientes):
 # Rotina principal de controle do sistema
 def main():
     """Rotina principal do sistema"""
-    qtde_maxima_saques = 3
-    valor_maximo_por_saque = 500
     clientes = []
     contas = []
-    agencia = "0001"
 
     # Verifica se há algum dado no Redis. Se houver, recupera, caso contrário, inicializa.
     if not verificar_redis():
         inicializar_redis(0, 0, "")
-    saldo, saques_realizados, extrato = obter_dados_redis()  # pylint: disable-msg=C0103
+    saldo, saques_realizados, extrato = obter_dados_redis()
 
     while True:
         salvar_dados_redis(saldo, saques_realizados, extrato)
@@ -233,9 +254,9 @@ def main():
             saldo, extrato, saques_realizados = sacar(
                 saldo=saldo,
                 extrato=extrato,
-                limite=valor_maximo_por_saque,
+                limite=VALOR_MAXIMO_POR_SAQUE,
                 numero_saques=saques_realizados,
-                limite_saques=qtde_maxima_saques,
+                limite_saques=QTDE_MAXIMA_SAQUES,
             )
 
         elif opcao == "e":
@@ -246,7 +267,7 @@ def main():
 
         elif opcao == "n":
             numero_conta = len(contas) + 1
-            criar_conta(agencia, numero_conta, clientes, contas)
+            criar_conta(AGENCIA, numero_conta, clientes, contas)
 
         elif opcao == "l":
             listar_contas(contas)
@@ -260,8 +281,8 @@ def main():
             )
 
 
-# Executa o loop principal
-cache = redis.Redis(host="redis", port=6379)
+if __name__ == "__main__":
+    cache = redis.Redis(host="redis", port=6379)
 
-limpar_tela()
-main()
+    limpar_tela()
+    main()

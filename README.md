@@ -11,7 +11,7 @@
 
 Este repositório é parte do meu portfolio
 
-![WIP](https://github.com/portfolio-2025br/bootcamp-gft/raw/main/images/WIP.png)
+![WIP](https://github.com/portfolio-2025br/bootcamp-csharp/raw/main/images/WIP.png)
 
 </div>
 
