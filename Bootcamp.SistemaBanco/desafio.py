@@ -40,13 +40,8 @@ from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from datetime import datetime, timedelta, timezone
 
+import constantes
 import redis
-
-AGENCIA = "0001"
-QTDE_MAXIMA_SAQUES = 3
-VALOR_MAXIMO_POR_SAQUE = 500.0
-ERR_0001 = "=> Cliente não encontrado ou não possui conta!"
-MSG_0001 = "Informe o CPF do cliente: "
 
 
 class JSONSerializableMixin:  # pylint: disable-msg=R0903
@@ -227,7 +222,7 @@ class Conta(JSONSerializableMixin):
     _cliente: Cliente
 
     def __post_init__(self):
-        self._agencia = AGENCIA
+        self._agencia = constantes.AGENCIA
         self._historico = Historico()
         self._saldo = 0.0
 
@@ -269,12 +264,12 @@ class Conta(JSONSerializableMixin):
     @property
     def qtde_maxima_saques_dia(self) -> int:
         """Quantidade máxima de saques diários"""
-        return QTDE_MAXIMA_SAQUES
+        return constantes.QTDE_MAXIMA_SAQUES
 
     @property
     def valor_maximo_saque(self) -> float:
         """Valor máximo do saque que é permitido"""
-        return VALOR_MAXIMO_POR_SAQUE
+        return constantes.VALOR_MAXIMO_POR_SAQUE
 
     @property
     def chave(self) -> str:
@@ -309,7 +304,7 @@ class Conta(JSONSerializableMixin):
         if valor > 0:
             self._saldo += valor
             return True, "=== Depósito realizado com sucesso ==="
-        return False, "==> Operação falhou! O valor informado é inválido!"
+        return False, constantes.Erro.OPE_VALOR_INVALIDO
 
     def sacar(self, valor) -> tuple[bool, str]:
         """Realiza a operação saque no objeto"""
@@ -326,17 +321,17 @@ class Conta(JSONSerializableMixin):
         excedeu_quantidade = numero_saques >= self.qtde_maxima_saques_dia
 
         if excedeu_saldo:
-            mensagem = "Operação falhou! Você não tem saldo suficiente."
+            mensagem = "==> Operação falhou! Você não tem saldo suficiente."
         elif excedeu_limite:
-            mensagem = "===> Operação falhou! Valor permitido para saques excedido!"
+            mensagem = "==> Operação falhou! Valor permitido para saques excedido."
         elif excedeu_quantidade:
-            mensagem = "===> Operação falhou! Número máximo de saques excedido!"
+            mensagem = "==> Operação falhou! Número máximo de saques excedido."
         elif valor > 0:
             self._saldo -= valor
             mensagem = "=== Saque realizado com sucesso ==="
             return True, mensagem
         else:
-            mensagem = "==> Operação falhou! O valor informado é inválido!"
+            mensagem = constantes.Erro.OPE_VALOR_INVALIDO
 
         return False, mensagem
 
@@ -357,12 +352,14 @@ class Transacao(ABC):
 class Saque(Transacao):
     """Classe para representar os saques"""
 
+    nome: str = __qualname__
+
     def __init__(self, valor):
         self._valor = valor
 
     @property
     def valor(self) -> float:
-        """Representa o valor da operação"""
+        """Representa o valor do saque"""
         return self._valor
 
     def registrar(self, conta) -> str:
@@ -377,12 +374,14 @@ class Saque(Transacao):
 class Deposito(Transacao):
     """Classe para representar os depósitos"""
 
+    nome: str = __qualname__
+
     def __init__(self, valor):
         self._valor = valor
 
     @property
     def valor(self) -> float:
-        """Representa o valor da operação"""
+        """Representa o valor do depósito"""
         return self._valor
 
     def registrar(self, conta) -> str:
@@ -471,9 +470,9 @@ class PersistenciaDB:
                         raise NotImplementedError
 
                 else:
-                    print("=> Erro X563!")
+                    print("==> Erro X563!")
             else:
-                print("=> Erro X564!")
+                print("==> Erro X564!")
 
     @classmethod
     def listar_clientes(cls):
@@ -553,20 +552,8 @@ def limpar_tela():
 
 def menu() -> str:
     """Mostra o menu principal do sistema"""
-    texto = """\n
-    ====================== MENU ======================
-    [d]\tDepositar
-    [s]\tSacar
-    [e]\tExtrato
-       \t-----------------
-    [c]\tCadastrar cliente
-    [n]\tCriar nova conta
-    [l]\tListar contas
-       \t-----------------
-    [q]\tSair
-       \t=> """
 
-    return input(textwrap.dedent(texto))
+    return input(textwrap.dedent(constantes.MENU_PRINCIPAL))
 
 
 # Rotinas de manutenção do cliente e conta
@@ -590,15 +577,15 @@ def criar_cliente(clientes):
         if cliente.salvar(clientes):
             print("=== Cliente criado com sucesso! ===")
         else:
-            print("=> Erro no banco ao salvar o cliente!")
+            print("==> Erro no banco ao salvar o cliente!")
 
     else:
-        print("=> Já existe um cliente com esse CPF!")
+        print("==> Já existe um cliente com esse CPF!")
 
 
 def criar_conta(clientes, contas):
     """Cria uma nova conta, caso o CPF (cliente) já exista cadastrado"""
-    cpf = input(MSG_0001)
+    cpf = input(constantes.Aviso.MSG_INFORME_CPF)
     cliente = buscar_cliente(cpf, clientes)
 
     if cliente:
@@ -607,7 +594,7 @@ def criar_conta(clientes, contas):
         if conta.salvar(contas):
             print("=== Conta criada com sucesso! ===")
     else:
-        print("=> Cliente não encontrado, impossível criar uma conta!")
+        print("==> Cliente não encontrado, impossível criar uma conta!")
 
 
 def listar_contas(clientes, contas):
@@ -646,37 +633,28 @@ def obter_contas(cpf, contas) -> Conta | None:
     return None
 
 
-def depositar(clientes, contas):
-    """Realiza um depósito na conta do cliente"""
-    cpf = input(MSG_0001)
+def transacionar(clientes, contas, operacao):
+    """Realiza uma operação (depósito ou saque) na conta do cliente"""
+    cpf = input(constantes.Aviso.MSG_INFORME_CPF)
     cliente = buscar_cliente(cpf, clientes)
     conta = obter_contas(cpf, contas)
 
     if cliente and conta:
-        valor = float(input("Informe o valor do depósito: "))
-        transacao = Deposito(valor)
+        valor = float(input(f"Informe o valor do {operacao.nome.lower()}: "))
+        if operacao.nome == Deposito.__name__:
+            transacao = Deposito(valor)
+        elif operacao.nome == Saque.__name__:
+            transacao = Saque(valor)
+        else:
+            raise NotImplementedError
         print(transacao.registrar(conta))
     else:
-        print(ERR_0001)
-
-
-def sacar(clientes, contas):
-    """Realiza um saque na conta do cliente"""
-    cpf = input(MSG_0001)
-    cliente = buscar_cliente(cpf, clientes)
-    conta = obter_contas(cpf, contas)
-
-    if cliente and conta:
-        valor = float(input("Informe o valor do saque: "))
-        transacao = Saque(valor)
-        print(transacao.registrar(conta))
-    else:
-        print(ERR_0001)
+        print(constantes.Erro.CLI_NAO_ENCONTRADO)
 
 
 def emitir_extrato(clientes, contas):
     """Imprime o extrato da conta do cliente"""
-    cpf = input(MSG_0001)
+    cpf = input(constantes.Aviso.MSG_INFORME_CPF)
     cliente = buscar_cliente(cpf, clientes)
     conta = obter_contas(cpf, contas)
 
@@ -705,7 +683,7 @@ def emitir_extrato(clientes, contas):
         print(f"\nSaldo:{f'R$ {conta.saldo:.2f}':>44}")
         print("==================================================")
     else:
-        print(ERR_0001)
+        print(constantes.Erro.CLI_NAO_ENCONTRADO)
 
 
 def main():
@@ -722,10 +700,10 @@ def main():
         limpar_tela()
 
         if opcao == "d":
-            depositar(clientes, contas)
+            transacionar(clientes, contas, Deposito)
 
         elif opcao == "s":
-            sacar(clientes, contas)
+            transacionar(clientes, contas, Saque)
 
         elif opcao == "e":
             emitir_extrato(clientes, contas)
