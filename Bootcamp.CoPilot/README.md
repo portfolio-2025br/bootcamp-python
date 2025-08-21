@@ -15,14 +15,14 @@ No curso aprendemos a criar copilotos:
 - baseados em modelos pré-definidos criados pela Microsoft;
 - ou criar modelos baseados em descrição para a IA, em que definimos via _prompt_ o que queremos e qual base de
   conhecimento a IA deve usar;
-- ou criar modelos em branco, que basicamente funcionam da mesma forma que os modelo baseados em descrição para
-  a IA listada acima.
+- ou criar modelos em branco, que basicamente funcionam da mesma forma que os modelo baseados em descrição para a IA
+  listada acima.
 
 Fomos informados que também é possível criar um agente baseado em chat, mas este parece ser um recurso que ainda está em
 desenvolvimento e não aparece nas aulas.
 
-No meu caso, para usar o copilot, preciso ter acesso a uma conta no Microsoft 365. Contudo, é sim possível criar
-uma conta gratuíta no Microsoft 365.
+No meu caso, para usar o copilot, preciso ter acesso a uma conta no Microsoft 365. Contudo, é sim possível criar uma
+conta gratuíta no Microsoft 365.
 
 Me pareceu adequado e interessante usar conta de inquilino (_tenant_) do Office 365 para TEST/DEV gratuito e usá-la para
 explorar, testar e desenvolver soluções baseadas no Microsoft 365.
@@ -47,7 +47,7 @@ Notas:
 
 ![Agente baseado em modelo](images/Agente-modelo.png)
 
-****
+---
 
 - Criação de um agente via _prompt_:
 
