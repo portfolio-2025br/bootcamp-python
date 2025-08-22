@@ -10,7 +10,7 @@ financeiros e de segurança.
 
 ## Contexto
 
-Neste projeto eu utilizei Docker e Docker Compose para executar o desenvolvimento e testes da aplicação.
+Neste projeto eu utilizei Docker, Redis e Docker Compose para executar o desenvolvimento e testes da aplicação.
 
 Para executar o aplicativo, basta executar:
 
