@@ -1,7 +1,6 @@
 # bootcamp_claudio
 
-Description.
-The package bootcamp_claudio is used to:
+Description. The package bootcamp_claudio is used to:
 
 - este é apenas um exemplo de pacote.
 

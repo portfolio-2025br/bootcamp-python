@@ -67,13 +67,13 @@ O CI funciona e adverte o time de desenvolivimento em caso de problemas.
 
 ![CI](images/CI-trabalhando.png)
 
-****
+---
 
 - Detecção de código fonte duplicado:
 
 ![Duplicidade](images/Codigo-duplicado.png)
 
-****
+---
 
 - Detecção de problemas na formatação do código fonte:
 
@@ -85,7 +85,7 @@ O CI funciona e adverte o time de desenvolivimento em caso de problemas.
 
 ![Testes de movimentação](images/Teste-1.png)
 
-****
+---
 
 - Listagem de Contas:
 
@@ -97,7 +97,7 @@ O CI funciona e adverte o time de desenvolivimento em caso de problemas.
 
 ![Dados salvos em DB](images/PersistenciaDB.png)
 
-****
+---
 
 - Foram criadas rotinas de debug para listar os dados que estão salvos no banco de dados:
 
