@@ -49,6 +49,7 @@ jobs:
             checkpoint-api.hashicorp.com:443
             crl3.digicert.com:80
             github.com:443
+            mirror.gcr.io:443
             pypi.org:443
             raw.githubusercontent.com:443
             registry.terraform.io:443
