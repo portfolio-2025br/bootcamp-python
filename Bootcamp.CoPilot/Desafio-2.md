@@ -2,14 +2,18 @@
 
 ## Resumo
 
-No curso nos aprofundamos no processo de criação de copilotos.
+No curso que nos dá base para o desafio nós nos aprofundamos no processo de criação de copilotos.
 
-Existe a possibilidade de se usar YAML para personalizar os agentes:
+Gostaria de ressaltar que existe a possibilidade de se usar YAML para personalizar os agentes:
 
-- isto tornaria possível o uso de CaC (copiloto como código):
-  - com isto podemos usar versionamento do código, avaliação e aprovação de patches por humanos, etc.
+- isto tornaria possível o uso de CaC (copiloto como código) ou TaC (tópico como código):
+  - com isto poderíamos usar versionamento do código, avaliação e aprovação de patches por humanos, etc.
 
-### Principais conceitos relacionados a "tópico"
+O fato do instrutor alertar MUIIITAS vezes que a parte generativa do Microsoft Copilot "precisa" ser configurada em
+"contêineres" (o novo tópico) em Inglês sugere que o produto não é de interesse para empresas no Brasil. Ao menos, que
+as empresas precisam ser muito cautelosas ao investir seriamente na plataforma. Pelo menos por enquanto.
+
+### Conceitos relacionados a "tópico" relevantes para o desafio
 
 - apesar dos avanços da IA generativa, os tópicos ainda são muito importantes na resolução de problemas de agentes de
   atendimento:
@@ -28,6 +32,16 @@ um copiloto de IA dentro da própria plataforma:
 
 - existem modelos de _prompts_ feitos pela comunidade que podemos usar em nossos projetos;
 - podemos sugerir _prompts_ de exemplo no Sample Solution Gallery para a Microsoft e ganhar badges ao fazer isto.
+
+### Durante o Desafio
+
+"As coisas" que são muito interessantes que sejam personalidadas:
+
+- o tópico "Conversational boosting", que é acionado quando a IA é acionada na conversa;
+- o tópico "Fallback" é acionado quando o tópico falha.
+
+Ainda, é importante e interessante personalizar a mensagem de erro do tópico. Eventualmente, logando o status do
+processamento para debug posterior.
 
 ### Outras Observações
 
@@ -51,3 +65,9 @@ Notas:
 - Como podemos ver, usar a inteface é simple e intuitivo:
 
 ![Agente baseado em modelo](images/Topicos.png)
+
+---
+
+- O desafio em si é simples, basta usar a GUI:
+
+![Agente baseado em modelo](images/Desafio.png)
