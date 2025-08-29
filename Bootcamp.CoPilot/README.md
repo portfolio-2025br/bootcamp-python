@@ -52,3 +52,11 @@ Notas:
 - Criação de um agente via _prompt_:
 
 ![Agente baseado em IA](images/Agente-IA.png)
+
+- Curso Microsoft Learn I:
+
+![Agente baseado em IA](images/Curso-I.png)
+
+- Curso Microsoft Learn Concluído:
+
+![Agente baseado em IA](images/Curso-II.png)
