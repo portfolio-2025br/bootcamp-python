@@ -17,7 +17,7 @@
 # Dockerfile for development with Python
 # More info at https://github.com/portfolio-2025br/bootcamp-python
 
-FROM mcr.microsoft.com/devcontainers/python:3@sha256:0aa711e570b306c02946cdda67587ce8c65978dbb65691341cbcfd4854dfcfff
+FROM mcr.microsoft.com/devcontainers/python:3@sha256:b4b3a3f0cf67b787061d77bc4b76cdd37f78cc6829050ed3f7dcb7269a99beb5
 
 ENV NODE_DOWNLOAD_SHA256="c61e58b2284efea4746ffbdcb4d4080f58fa7a31fb0060d2b024eb3d2e95572d"
 
